@@ -26,7 +26,7 @@ int main(void) {
 
 int parse_header(FILE *fp, struct css1_header *header) {
 	// Parse NumberOfSounds
-	header->NumberOfSounds = get_DWORD(fp);
+	header->NumberOfSounds = fgetDWORD(fp);
 	// TODO
 	printf("NumberOfSounds: %i\n", header->NumberOfSounds);
 
@@ -34,7 +34,7 @@ int parse_header(FILE *fp, struct css1_header *header) {
 	header->OffsetList = calloc(header->NumberOfSounds, sizeof(uint32_t));
 
 	for (int i = 0; i < header->NumberOfSounds; i++) {
-		header->OffsetList[i] = get_DWORD(fp);
+		header->OffsetList[i] = fgetDWORD(fp);
 
 		if (i == 0) {
 			printf("Offset %i: %i\n", i, header->OffsetList[i] - header->OffsetList[i]);
@@ -44,7 +44,7 @@ int parse_header(FILE *fp, struct css1_header *header) {
 	}
 
 	// Parse DataSize
-	header->DataSize = get_DWORD(fp);
+	header->DataSize = fgetDWORD(fp);
 
 	// TODO
 	printf("DataSize: %i\n", header->DataSize);
@@ -55,17 +55,17 @@ int parse_header(FILE *fp, struct css1_header *header) {
 
 int parse_wav_header(FILE *fp, struct wav_header *header) {
 	// Populate the wav_header struct
-	header->wFormatTag = get_WORD(fp);
+	header->wFormatTag = fgetWORD(fp);
 	printf("%i\n", header->wFormatTag);
-	header->wChannels = get_WORD(fp);
+	header->wChannels = fgetWORD(fp);
 	printf("%i\n", header->wChannels);
-	header->dwSamplesPerSec = get_DWORD(fp);
+	header->dwSamplesPerSec = fgetDWORD(fp);
 	printf("%i\n", header->dwSamplesPerSec);
-	header->dwAvgBytesPerSec = get_DWORD(fp);
+	header->dwAvgBytesPerSec = fgetDWORD(fp);
 	printf("%i\n", header->dwAvgBytesPerSec);
-	header->wBlockAlign = get_WORD(fp);
+	header->wBlockAlign = fgetWORD(fp);
 	printf("%i\n", header->wBlockAlign);
-	header->wBitsPerSample = get_WORD(fp);
+	header->wBitsPerSample = fgetWORD(fp);
 	printf("%i\n", header->wBitsPerSample);
 
 
@@ -79,14 +79,20 @@ int parse_wav_data(FILE *fp, struct css1_header *header) {
 	// 16-bit samples
 	uint16_t *buffer = malloc((header->OffsetList[1] - header->OffsetList[0])*sizeof(uint16_t));
 
-	// Hopefully read in the right amount of data
-	fread(buffer, sizeof(uint16_t), (header->OffsetList[1] - header->OffsetList[0]), fp);
+	FILE *out = fopen("test.wav", "w");
 
-	for (int i = 0; i < 99; i++) {
-		printf("%x\n", buffer[i]);
-	}
+	// TODO
+	// Write the incomplete wav header
+	fputWORD(1, out);
+	fputWORD(1, out);
+	fputDWORD(22050, out);
+	fputDWORD(44100, out);
+	fputWORD(2, out);
+	fputWORD(16, out);
 
-	fopen("test.wav", "w");
+	fwrite(buffer, sizeof(uint16_t), (header->OffsetList[1] - header->OffsetList[0]), out);
+
+	fclose(out);
 
 
 
@@ -94,7 +100,7 @@ int parse_wav_data(FILE *fp, struct css1_header *header) {
 	return 0;
 }
 
-uint16_t get_WORD(FILE *fp) {
+uint16_t fgetWORD(FILE *fp) {
 	uint16_t WORD;
 
 	WORD = fgetc(fp);
@@ -104,7 +110,7 @@ uint16_t get_WORD(FILE *fp) {
 	return WORD;
 }
 
-uint32_t get_DWORD(FILE *fp) {
+uint32_t fgetDWORD(FILE *fp) {
 	uint32_t DWORD;
 
 	DWORD = fgetc(fp);
@@ -116,14 +122,20 @@ uint32_t get_DWORD(FILE *fp) {
 	return DWORD;
 }
 
-void put_WORD(uint16_t WORD, FILE *fp) {
+void fputWORD(uint16_t WORD, FILE *fp) {
+	fputc(WORD&0xff, fp);
+	fputc(WORD >> 8, fp);
 
 
 	return;
 }
 
-void put_DWORD(uint32_t DWORD, FILE *fp) {
+void fputDWORD(uint32_t DWORD, FILE *fp) {
+	fputc((DWORD >> 0)&0xff, fp);
+	fputc((DWORD >> 8)&0xff, fp);
+	fputc((DWORD >> 16)&0xff, fp);
+	fputc((DWORD >> 24)&0xff, fp);
+
 
 	return;
 }
-

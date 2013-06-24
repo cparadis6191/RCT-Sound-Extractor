@@ -24,7 +24,8 @@ int parse_header(FILE *fp, struct css1_header *header);
 int parse_wav_header(FILE *fp, struct wav_header *header);
 int parse_wav_data(FILE *fp, struct css1_header *header);
 
-uint16_t get_WORD(FILE *fp);
-uint32_t get_DWORD(FILE *fp);
-void put_WORD(uint16_t WORD, FILE *fp);
-void put_DWORD(uint32_t DWORD, FILE *fp);
+// Functions to deal with little endianess
+uint16_t fgetWORD(FILE *fp);
+uint32_t fgetDWORD(FILE *fp);
+void fputWORD(uint16_t WORD, FILE *fp);
+void fputDWORD(uint32_t DWORD, FILE *fp);
