@@ -1,4 +1,4 @@
-#include "stdint.h"
+#include <stdint.h>
 
 
 // css1.dat file information from
@@ -20,12 +20,12 @@ struct wav_header {
 };
 
 
-int parse_header(FILE *fp, struct css1_header *header);
-int parse_wav_header(FILE *fp, struct wav_header *header);
-uint16_t* parse_wav_data(FILE *fp, struct css1_header *header);
+struct css1_header* parse_header(FILE *fp);
+struct wav_header* parse_wav_header(FILE *fp);
+uint16_t* parse_wav_data(FILE *fp, size_t offset_start, size_t offset_end);
 
-int put_wav_header(FILE *fp, struct wav_header *header);
-int put_wav_data(FILE *fp, uint16_t *data, int size);
+int put_wav_header(FILE *fp, struct wav_header *w_header, size_t data_size);
+int put_wav_data(FILE *fp, uint16_t *data, size_t offset_start, size_t offset_end);
 
 // Functions to deal with little endianess
 uint16_t fgetWORD(FILE *fp);
