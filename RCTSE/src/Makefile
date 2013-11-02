@@ -1,14 +1,15 @@
 TARGET = RCTSE
-OBJS = RCTSE.o
+OBJS = ${TARGET}.o
 CFLAGS = -g -Wall -Wextra -std=c99
-LDFLAGS = # Libaries to be linked
 .PHONY:clean
 
-# CXX is already defined and depends on the object being made
-${TARGET}:${OBJS}
-	${CC} -o ../${TARGET} ${OBJS} ${LDFLAGS}
+all: ../${TARGET}.exe
 
-RCTSE.o:RCTSE.h
+# CXX is already defined and depends on the object being made
+../${TARGET}.exe: RCTSE.o
+	${CC} -o ../${TARGET} ${OBJS}
+
+RCTSE.o: RCTSE.h
 
 # This rule must be called explicitly
 clean:
