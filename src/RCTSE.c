@@ -110,22 +110,22 @@ uint16_t* parse_wav_data(FILE *fp, size_t offset_start, size_t offset_end) {
 int put_wav_header(FILE *fp, struct wav_header *w_header, size_t data_size) {
 	// RIFF chunk descriptor
 	fputs("RIFF", fp);
-	fputDWORD(2*data_size + 31, fp);	// TODO Size 36 + SubChunk2Size
-	fputs("WAVE", fp);	// format
+	fputDWORD(2*data_size + 31, fp);            // TODO Size 36 + SubChunk2Size
+	fputs("WAVE", fp);                          // format
 
 	// fmt sub-chunk
-	fputs("fmt", fp), fputc('\0', fp);			// Format chunk marker including null
-	fputWORD(16, fp);							// Size of format data
-	fputWORD(w_header->wFormatTag, fp);			// Type of format
-	fputWORD(w_header->wChannels, fp);			// Mono/stereo
-	fputDWORD(w_header->dwSamplesPerSec, fp);	// Sample rate
-	fputDWORD(w_header->dwAvgBytesPerSec, fp);	// Byte rate
-	fputWORD(w_header->wBlockAlign, fp);		// Block align
-	fputWORD(w_header->wBitsPerSample, fp);		// Bits per sample
+	fputs("fmt", fp), fputc('\0', fp);          // Format chunk marker including null
+	fputWORD(16, fp);                           // Size of format data
+	fputWORD(w_header->wFormatTag, fp);         // Type of format
+	fputWORD(w_header->wChannels, fp);          // Mono/stereo
+	fputDWORD(w_header->dwSamplesPerSec, fp);   // Sample rate
+	fputDWORD(w_header->dwAvgBytesPerSec, fp);  // Byte rate
+	fputWORD(w_header->wBlockAlign, fp);        // Block align
+	fputWORD(w_header->wBitsPerSample, fp);     // Bits per sample
 
 	// Data sub-chunk
-	fputs("data", fp);			// Data description header
-	fputDWORD(2*data_size, fp);	// Size of data bytes
+	fputs("data", fp);                          // Data description header
+	fputDWORD(2*data_size, fp);                 // Size of data bytes
 
 	// Data
 
