@@ -1,4 +1,4 @@
-TARGET = RCTSE
+TARGET = rctse
 OBJS = ${TARGET}.o
 CFLAGS = -g -Wall -Wextra -std=c99
 .PHONY:clean
@@ -6,10 +6,10 @@ CFLAGS = -g -Wall -Wextra -std=c99
 all: ../${TARGET}.exe
 
 # CXX is already defined and depends on the object being made
-../${TARGET}.exe: RCTSE.o
+../${TARGET}.exe: ${TARGET}.o
 	${CC} -o ../${TARGET} ${OBJS}
 
-RCTSE.o: RCTSE.h
+${TARGET}.o: ${TARGET}.h
 
 # This rule must be called explicitly
 clean:
