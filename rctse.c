@@ -5,7 +5,7 @@
 
 
 int main(void) {
-	FILE *fp = fopen("../Css1.dat", "r");
+	FILE *fp = fopen("Css1.dat", "r");
 	FILE *out = fopen("test.wav", "w");
 	uint16_t *data;
 	struct css1_header *c_header;
